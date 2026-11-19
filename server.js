@@ -3,7 +3,7 @@ const app = express()
 const cors = require("cors")
 const dotenv = require('dotenv')
 const connectDB = require('./db/connectDB')
-const seedProductsIfEmpty = require('./db/seedProducts')
+const ensureDemoProducts = require('./db/seedProducts')
 const productRoutes = require('./routes/productRoutes')
 const userRoutes = require('./routes/userRoutes')
 dotenv.config()
@@ -27,7 +27,7 @@ const startServer = async ()=>{
         if (!mongoUri) throw new Error('Missing MongoDB connection string (MONGO_URI)')
         await connectDB(mongoUri)
         console.log('connected to db');
-        await seedProductsIfEmpty()
+        await ensureDemoProducts()
         app.listen(port , ()=>{
             console.log(`server started at ${port}`);
         })
