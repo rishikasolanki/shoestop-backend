@@ -9,12 +9,18 @@ const signUp = asyncHandler(async (req,res) =>{
     const existingUser = await Users.findOne({email})
 
     if(existingUser ){
-        throw new Error ("User Already Exists")
+        return res.status(409).json({ error: 'An account with this email already exists. Please sign in.' })
     }
 
-    const user = await Users.create({
-        name,email,password 
-    })
+    let user
+    try {
+        user = await Users.create({ name, email, password })
+    } catch (error) {
+        if (error.code === 11000) {
+            return res.status(409).json({ error: 'An account with this email already exists. Please sign in.' })
+        }
+        throw error
+    }
 
     if(user)
     {
